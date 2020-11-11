@@ -1,16 +1,17 @@
 import fetch from '@/config/fetch'
 
-/**
- * 登陆
- */
-
 export const login = data => fetch('/admin/login', data, 'POST');
 
-/**
- * 退出
- */
+export const loginWeb = data => fetch('/api/login', data, 'POST');
 
 export const signout = () => fetch('/admin/signout');
+
+export const checkFeedback = () => fetch('/api/me/feedback');
+
+export const getTeacher = () => fetch('/api/user/teacher');
+
+export const updateTeacher = data => fetch('/api/user/teacher', data, 'PUT');
+
 
 /**
  * 获取用户信息

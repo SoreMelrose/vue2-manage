@@ -3,7 +3,7 @@
 	  	<transition name="form-fade" mode="in-out">
 	  		<section class="form_contianer" v-show="showLogin">
 		  		<div class="manage_tip">
-		  			<p>elm后台管理系统</p>
+		  			<p>企团团后台管理系统</p>
 		  		</div>
 		    	<el-form :model="loginForm" :rules="rules" ref="loginForm">
 					<el-form-item prop="username">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-	import {login, getAdminInfo} from '@/api/getData'
+	import {getAdminInfo,loginWeb} from '@/api/getData'
 	import {mapActions, mapState} from 'vuex'
 
 	export default {
@@ -60,8 +60,9 @@
 			async submitForm(formName) {
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
-						const res = await login({user_name: this.loginForm.username, password: this.loginForm.password})
-						if (res.status == 1) {
+						const res = await loginWeb({username: this.loginForm.username, password: this.loginForm.password})
+                        console.log(res)
+						if (res.code === 200) {
 							this.$message({
 		                        type: 'success',
 		                        message: '登录成功'
@@ -84,17 +85,17 @@
 				});
 			},
 		},
-		watch: {
-			adminInfo: function (newValue){
-				if (newValue.id) {
-					this.$message({
-                        type: 'success',
-                        message: '检测到您之前登录过，将自动登录'
-                    });
-					this.$router.push('manage')
-				}
-			}
-		}
+		// watch: {
+		// 	adminInfo: function (newValue){
+		// 		if (newValue.id) {
+		// 			this.$message({
+        //                 type: 'success',
+        //                 message: '检测到您之前登录过，将自动登录'
+        //             });
+		// 			this.$router.push('manage')
+		// 		}
+		// 	}
+		// }
 	}
 </script>
 

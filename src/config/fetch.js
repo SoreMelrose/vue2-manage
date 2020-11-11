@@ -3,8 +3,9 @@ import { baseUrl } from './env'
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	type = type.toUpperCase();
 	url = baseUrl + url;
-
-	if (type == 'GET') {
+    console.log(url);
+    console.log(data);
+	if (type === 'GET') {
 		let dataStr = ''; //数据拼接字符串
 		Object.keys(data).forEach(key => {
 			dataStr += key + '=' + data[key] + '&';
@@ -16,7 +17,8 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		}
 	}
 
-	if (window.fetch && method == 'fetch') {
+	if (window.fetch && method === 'fetch') {
+        console.log('fetch');
 		let requestConfig = {
 			credentials: 'include',
 			method: type,
@@ -28,12 +30,12 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			cache: "force-cache"
 		}
 
-		if (type == 'POST') {
+		if (type === 'POST'||type==='PUT') {
 			Object.defineProperty(requestConfig, 'body', {
 				value: JSON.stringify(data)
 			})
 		}
-		
+
 		try {
 			const response = await fetch(url, requestConfig);
 			const responseJson = await response.json();
@@ -42,6 +44,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			throw new Error(error)
 		}
 	} else {
+	    console.log('not fetch');
 		return new Promise((resolve, reject) => {
 			let requestObj;
 			if (window.XMLHttpRequest) {
@@ -51,7 +54,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			}
 
 			let sendData = '';
-			if (type == 'POST') {
+			if (type === 'POST'||type==='PUT') {
 				sendData = JSON.stringify(data);
 			}
 
@@ -60,9 +63,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {
-				if (requestObj.readyState == 4) {
-					if (requestObj.status == 200) {
-						let obj = requestObj.response
+				if (requestObj.readyState === 4) {
+					if (requestObj.status === 200) {
+						let obj = requestObj.response;
 						if (typeof obj !== 'object') {
 							obj = JSON.parse(obj);
 						}

@@ -10,9 +10,10 @@ const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'add
 const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'addGoods');
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList');
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList');
-const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList');
+const teacherList = r => require.ensure([], () => r(require('@/page/teacherList')), 'teacherList');
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList');
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList');
+const checkFeedback = r => require.ensure([], () => r(require('@/page/checkFeedback')), 'checkFeedback');
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor');
 const newMember = r => require.ensure([], () => r(require('@/page/newMember')), 'newMember');
 const uploadImg = r => require.ensure([], () => r(require('@/page/uploadImg')), 'uploadImg');
@@ -51,14 +52,18 @@ const routes = [
 			component: shopList,
 			meta: ['数据管理', '商家列表'],
 		},{
-			path: '/foodList',
-			component: foodList,
-			meta: ['数据管理', '食品列表'],
+			path: '/teacherList',
+			component: teacherList,
+			meta: ['数据管理', '教师管理'],
 		},{
 			path: '/orderList',
 			component: orderList,
 			meta: ['数据管理', '订单列表'],
 		},{
+            path: '/checkFeedback',
+            component: checkFeedback,
+            meta: ['数据管理', '用户反馈'],
+        },{
 			path: '/adminList',
 			component: adminList,
 			meta: ['数据管理', '管理员列表'],
