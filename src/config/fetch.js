@@ -16,9 +16,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			url = url + '?' + dataStr;
 		}
 	}
-
+    // 对于支持fetch方法的浏览器，处理如下：
 	if (window.fetch && method === 'fetch') {
-        console.log('fetch');
+        // console.log('fetch');
 		let requestConfig = {
 			credentials: 'include',
 			method: type,
@@ -27,7 +27,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 				'Content-Type': 'application/json'
 			},
 			mode: "cors",
-			cache: "force-cache"
+			cache: "no-cache"
 		}
 
 		if (type === 'POST'||type==='PUT') {
@@ -43,7 +43,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		} catch (error) {
 			throw new Error(error)
 		}
-	} else {
+	}
+    // 对于不支持fetch的浏览器，便自动使用 ajax + promise
+	else {
 	    console.log('not fetch');
 		return new Promise((resolve, reject) => {
 			let requestObj;

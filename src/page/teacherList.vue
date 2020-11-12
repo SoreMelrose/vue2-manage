@@ -56,7 +56,7 @@
                     <!--:total="count">-->
                 <!--</el-pagination>-->
             <!--</div>-->
-            <el-dialog title="修改老师信息" v-model="dialogFormVisible">
+            <el-dialog title="修改老师信息" v-model="dialogFormVisible" v-loading="loading" element-loading-text="图片上传中">
                 <el-form :model="selectTable">
                     <el-form-item label="老师姓名" label-width="100px">
                         <el-input v-model="selectTable.realName" auto-complete="off"></el-input>
@@ -89,8 +89,10 @@
                             :action="baseUrl + '/api/file/upload'"
                             :limit="1"
                             :show-file-list="false"
+                            :on-change="imageUpload"
                             :on-success="handleServiceAvatarScucess"
                             :before-upload="beforeAvatarUpload">
+
                             <img v-if="selectTable.head" :src="selectTable.head" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -113,6 +115,7 @@
 	export default {
         data(){
             return{
+                loading: false,
                 baseUrl,
                 teacherInfo:[],
                 dialogFormVisible: false,
@@ -132,9 +135,9 @@
             async initData(){
                 try{
                     const res = await getTeacher({});
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         // this.count = countData.count;
-                        this.teacherInfo=res.data
+                        this.teacherInfo=res.data;
                         console.log(res.data)
                     }else{
                         throw new Error('获取数据失败');
@@ -143,6 +146,9 @@
                 }catch(err){
                     console.log('获取数据失败', err);
                 }
+            },
+            imageUpload(file){
+              this.loading = file.status !== 'success';
             },
             handleEdit(index, row) {
                 this.selectTable = row;
@@ -157,7 +163,8 @@
                 console.log(this.selectTable);
 
                 this.selectTable.head = URL.createObjectURL(file.raw);
-                if (res.code == 200) {
+                if (res.code === 200) {
+                    console.log('上传成功');
                     this.selectTable.head = res.data;
                     // this.selectTable.head = URL.createObjectURL(file.raw);
                 }else{
