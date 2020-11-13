@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router)
+Vue.use(Router);
 
 const login = r => require.ensure([], () => r(require('@/page/login')), 'login');
 const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manage');
@@ -16,6 +16,7 @@ const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 
 const courseList = r => require.ensure([], () => r(require('@/page/courseList')), 'courseList');
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList');
 const checkFeedback = r => require.ensure([], () => r(require('@/page/checkFeedback')), 'checkFeedback');
+const courseDetail = r => require.ensure([], () => r(require('@/page/courseDetail')), 'courseDetail');
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor');
 const newMember = r => require.ensure([], () => r(require('@/page/newMember')), 'newMember');
 const uploadImg = r => require.ensure([], () => r(require('@/page/uploadImg')), 'uploadImg');
@@ -29,6 +30,7 @@ const routes = [
 		path: '/',
 		component: login
 	},
+
 	{
 		path: '/manage',
 		component: manage,
@@ -38,6 +40,10 @@ const routes = [
 			component: home,
 			meta: [],
 		},{
+            path: '/courseDetail',
+            component: courseDetail,
+            meta: ['数据管理', '课程管理','课程详情'],
+        },{
 			path: '/addShop',
 			component: addShop,
 			meta: ['添加数据', '添加商铺'],

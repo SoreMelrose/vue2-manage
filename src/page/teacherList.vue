@@ -4,6 +4,7 @@
         <div class="table_container">
             <el-table
                 :data="teacherInfo"
+                align="center"
                 style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
@@ -16,7 +17,13 @@
                 </el-table-column>
                 <el-table-column
                     label="id"
+                    width="60"
                     prop="id">
+                </el-table-column>
+                <el-table-column label="头像" width="90" align="center">
+                    　　<template slot-scope="scope">
+                    　　　　<img :v-if="scope.row.head" :src="scope.row.head" width="40" height="40" class="head_pic"/>
+                    　　</template>
                 </el-table-column>
                 <el-table-column
                     label="姓名"
