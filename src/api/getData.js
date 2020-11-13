@@ -4,15 +4,20 @@ export const login = data => fetch('/admin/login', data, 'POST');
 
 export const loginWeb = data => fetch('/api/login', data, 'POST');
 
+
 export const signout = () => fetch('/admin/signout');
 
 export const checkFeedback = () => fetch('/api/me/feedback');
 
 export const getTeacher = () => fetch('/api/user/teacher');
 
+export const getCourse = () => fetch('/api/course/');
+
+export const getOrder = () => fetch('/api/order/all');
+
 export const updateTeacher = data => fetch('/api/user/teacher', data, 'PUT');
 
-
+export const addTeacher = data => fetch('/api/user/teacher', data, 'POST');
 /**
  * 获取用户信息
  */

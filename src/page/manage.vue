@@ -9,12 +9,14 @@
 						<el-menu-item index="userList">用户列表</el-menu-item>
 						<el-menu-item index="shopList">商家列表</el-menu-item>
 						<el-menu-item index="teacherList">教师管理</el-menu-item>
+						<el-menu-item index="courseList">课程管理</el-menu-item>
 						<el-menu-item index="orderList">订单列表</el-menu-item>
 						<el-menu-item index="checkFeedback">反馈列表</el-menu-item>
 						<el-menu-item index="adminList">管理员列表</el-menu-item>
 					</el-submenu>
 					<el-submenu index="3">
 						<template slot="title"><i class="el-icon-plus"></i>添加数据</template>
+                        <el-menu-item index="addTeacher">添加老师</el-menu-item>
 						<el-menu-item index="addShop">添加商铺</el-menu-item>
 						<el-menu-item index="addGoods">添加商品</el-menu-item>
 					</el-submenu>

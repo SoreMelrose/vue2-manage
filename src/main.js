@@ -4,7 +4,14 @@ import router from './router'
 import store from './store/'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+import moment from 'moment'
 
+Vue.use(require('vue-moment'));
+Vue.prototype.moment = moment;
+
+Vue.filter('dateYMDHMSFormat',function(dateStr,pattern='YYYY-MM-DD HH:mm:ss'){
+    return moment(dateStr).format(pattern);
+});
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI);

@@ -8,10 +8,12 @@ const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manag
 const home = r => require.ensure([], () => r(require('@/page/home')), 'home');
 const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'addShop');
 const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'addGoods');
+const addTeacher = r => require.ensure([], () => r(require('@/page/addTeacher')), 'addTeacher');
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList');
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList');
 const teacherList = r => require.ensure([], () => r(require('@/page/teacherList')), 'teacherList');
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList');
+const courseList = r => require.ensure([], () => r(require('@/page/courseList')), 'courseList');
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList');
 const checkFeedback = r => require.ensure([], () => r(require('@/page/checkFeedback')), 'checkFeedback');
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor');
@@ -44,6 +46,10 @@ const routes = [
 			component: addGoods,
 			meta: ['添加数据', '添加商品'],
 		},{
+            path: '/addTeacher',
+            component: addTeacher,
+            meta: ['添加数据', '添加商品'],
+        },{
 			path: '/userList',
 			component: userList,
 			meta: ['数据管理', '用户列表'],
@@ -55,6 +61,10 @@ const routes = [
 			path: '/teacherList',
 			component: teacherList,
 			meta: ['数据管理', '教师管理'],
+		},{
+			path: '/courseList',
+			component: courseList,
+			meta: ['数据管理', '课程管理'],
 		},{
 			path: '/orderList',
 			component: orderList,

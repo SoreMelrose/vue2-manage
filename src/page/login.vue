@@ -10,7 +10,7 @@
 						<el-input v-model="loginForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
 					</el-form-item>
 					<el-form-item prop="password">
-						<el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
+						<el-input type="password" placeholder="密码" v-model="loginForm.password" @keyup.enter.native="submitForm('loginForm')"></el-input>
 					</el-form-item>
 					<el-form-item>
 				    	<el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import {getAdminInfo,loginWeb} from '@/api/getData'
+	import {loginWeb} from '@/api/getData'
 	import {mapActions, mapState} from 'vuex'
 
 	export default {
@@ -50,10 +50,10 @@
     		// }
 		},
 		computed: {
-			...mapState(['adminInfo']),
+			// ...mapState(['adminInfo']),
 		},
 		methods: {
-			...mapActions(['getAdminData']),
+			// ...mapActions(['getAdminData']),
 			async submitForm(formName) {
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
