@@ -24,7 +24,7 @@
                         </el-input>
                     </el-form-item>
 
-					<el-form-item label="上传老师照片" v-loading="loading" element-loading-text="图片上传中">
+					<el-form-item label="上传老师照片" v-loading="loading" prop="head" element-loading-text="图片上传中">
 						<el-upload
 						  class="avatar-uploader"
 						  :action="baseUrl + '/api/file/upload'"

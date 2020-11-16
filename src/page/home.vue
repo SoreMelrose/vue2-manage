@@ -3,6 +3,7 @@
         <head-top></head-top>
 		<section class="data_section">
 			<header class="section_title">数据统计</header>
+            <!--<p>{{count}}</p>-->
 			<el-row :gutter="20" style="margin-bottom: 10px;">
                 <el-col :span="4"><div class="data_list today_head"><span class="data_num head">当日数据：</span></div></el-col>
 				<el-col :span="4"><div class="data_list"><span class="data_num">{{userCount}}</span> 新增用户</div></el-col>
@@ -22,8 +23,9 @@
 
 <script>
 	import headTop from '../components/headTop'
-	import tendency from '../components/tendency' 
+	import tendency from '../components/tendency'
 	import dtime from 'time-formater'
+    import { mapGetters,mapState } from "vuex";
 	import {userCount, orderCount, getUserCount, getOrderCount, adminDayCount, adminCount} from '@/api/getData'
     export default {
     	data(){
@@ -48,25 +50,33 @@
     			const date = dtime(new Date().getTime() - 86400000*i).format('YYYY-MM-DD')
     			this.sevenDay.push(date)
     		}
-    		this.getSevenData();
+    		// this.getSevenData();
     	},
         computed: {
-
+            // count(){
+            //     return this.$store.state.adminInfo.Token;
+            // },
+            //或
+            // ...mapState({
+            //     count: state => state.adminInfo.Token
+            //  })
+            // ...mapState({count: state => state.adminInfo.Token})
         },
+
     	methods: {
     		async initData(){
     			const today = dtime().format('YYYY-MM-DD')
-    			Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
-    			.then(res => {
-    				this.userCount = res[0].count;
-    				this.orderCount = res[1].count;
-                    this.adminCount = res[2].count;
-                    this.allUserCount = res[3].count;
-                    this.allOrderCount = res[4].count;
-                    this.allAdminCount = res[5].count;
-    			}).catch(err => {
-    				console.log(err)
-    			})
+    			// Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
+    			// .then(res => {
+    			// 	this.userCount = res[0].count;
+    			// 	this.orderCount = res[1].count;
+                //     this.adminCount = res[2].count;
+                //     this.allUserCount = res[3].count;
+                //     this.allOrderCount = res[4].count;
+                //     this.allAdminCount = res[5].count;
+    			// }).catch(err => {
+    			// 	console.log(err)
+    			// })
     		},
     		async getSevenData(){
     			const apiArr = [[],[],[]];

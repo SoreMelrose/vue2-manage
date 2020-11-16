@@ -1,5 +1,5 @@
 <template>
-  	<div class="login_page fillcontain">
+  	<div class="login_page fillcontain"  v-loading="loading">
 	  	<transition name="form-fade" mode="in-out">
 	  		<section class="form_contianer" v-show="showLogin">
 		  		<div class="manage_tip">
@@ -28,6 +28,7 @@
 	export default {
 	    data(){
 			return {
+                loading:false,
 				loginForm: {
 					username: '',
 					password: '',
@@ -57,9 +58,12 @@
 			async submitForm(formName) {
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
-						const res = await loginWeb({username: this.loginForm.username, password: this.loginForm.password})
-                        console.log(res)
+					    this.loading=true;
+						const res = await loginWeb({username: this.loginForm.username, password: this.loginForm.password});
+						this.loading=false;
+                        console.log(res);
 						if (res.code === 200) {
+                            this.$store.commit("saveUserInfo", res.data);
 							this.$message({
 		                        type: 'success',
 		                        message: '登录成功'

@@ -18,9 +18,12 @@ export const getOrder = () => fetch('/api/order/all');
 export const getCourseDetail = id => fetch('/api/course/info',{id: id,});
 
 export const updateTeacher = data => fetch('/api/user/teacher', data, 'PUT');
+
 export const updateCourse = data => fetch('/api/course/info', data, 'PUT');
 
 export const addTeacher = data => fetch('/api/user/teacher', data, 'POST');
+
+export const addCourse = data => fetch('/api/course/info', data, 'POST');
 /**
  * 获取用户信息
  */

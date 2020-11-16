@@ -1,7 +1,7 @@
 <template>
     <div class="fillcontain">
         <head-top></head-top>
-        <div class="table_container">
+        <div class="table_container" v-loading="finishLoading">
             <el-table
                 :data="feedData"
                 style="width: 100%">
@@ -111,6 +111,7 @@
 	export default {
         data(){
             return{
+                finishLoading:true,
                 feedData:[{
                     "id": 1,
                     "content": "这里是对平台的反馈信息",
@@ -155,7 +156,8 @@
                     const res = await checkFeedback({});
                     if (res.code == 200) {
                         // this.count = countData.count;
-                        this.feedData=res.data
+                        this.feedData=res.data;
+                        this.finishLoading=false;
                         console.log(res.data)
                     }else{
                         throw new Error('获取数据失败');

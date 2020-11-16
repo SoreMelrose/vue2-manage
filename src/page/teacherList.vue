@@ -1,7 +1,7 @@
 <template>
     <div class="fillcontain">
         <head-top></head-top>
-        <div class="table_container">
+        <div class="table_container"  v-loading="finishLoading">
             <el-table
                 :data="teacherInfo"
                 align="center"
@@ -122,6 +122,7 @@
 	export default {
         data(){
             return{
+                finishLoading:true,
                 loading: false,
                 baseUrl,
                 teacherInfo:[],
@@ -145,6 +146,7 @@
                     if (res.code === 200) {
                         // this.count = countData.count;
                         this.teacherInfo=res.data;
+                        this.finishLoading=false;
                         console.log(res.data)
                     }else{
                         throw new Error('获取数据失败');
