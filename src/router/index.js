@@ -17,6 +17,7 @@ const teacherList = r => require.ensure([], () => r(require('@/page/teacherList'
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList');
 const courseList = r => require.ensure([], () => r(require('@/page/courseList')), 'courseList');
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList');
+const shareList = r => require.ensure([], () => r(require('@/page/shareList')), 'shareList');
 const checkFeedback = r => require.ensure([], () => r(require('@/page/checkFeedback')), 'checkFeedback');
 const courseDetail = r => require.ensure([], () => r(require('@/page/courseDetail')), 'courseDetail');
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor');
@@ -90,6 +91,10 @@ const router = new Router({
             },{
                 path: '/checkFeedback',
                 component: checkFeedback,
+                meta: ['数据管理', '用户反馈'],
+            },{
+                path: '/shareList',
+                component: shareList,
                 meta: ['数据管理', '用户反馈'],
             },{
                 path: '/adminList',

@@ -5,16 +5,17 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	url = baseUrl + url;
     console.log(url);
     console.log(data);
-	if (type === 'GET') {
+	if (type === 'GET'||type === 'DELETE') {
 		let dataStr = ''; //数据拼接字符串
 		Object.keys(data).forEach(key => {
 			dataStr += key + '=' + data[key] + '&';
-		})
+		});
 
 		if (dataStr !== '') {
 			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
 			url = url + '?' + dataStr;
 		}
+		console.log('url'+url);
 	}
     // 对于支持fetch方法的浏览器，处理如下：
 	if (window.fetch && method === 'fetch') {
@@ -28,7 +29,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			},
 			mode: "cors",
 			cache: "no-cache"
-		}
+		};
 
 		if (type === 'POST'||type==='PUT') {
 			Object.defineProperty(requestConfig, 'body', {

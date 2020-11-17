@@ -24,6 +24,16 @@ export const updateCourse = data => fetch('/api/course/info', data, 'PUT');
 export const addTeacher = data => fetch('/api/user/teacher', data, 'POST');
 
 export const addCourse = data => fetch('/api/course/info', data, 'POST');
+
+export const deleteFeedback = data => fetch('/api/me/feedback' ,data, 'DELETE');
+
+export const deleteTeacher = data => fetch('/api/user/teacher', data, 'DELETE');
+
+export const deleteCourse = data => fetch('/api/course/info' , data, 'DELETE');
+
+export const getShare = data => fetch('/api/user/share/list' , data, 'GET');
+
+
 /**
  * 获取用户信息
  */

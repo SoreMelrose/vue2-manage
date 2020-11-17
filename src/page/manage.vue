@@ -11,6 +11,7 @@
 						<el-menu-item index="teacherList">教师管理</el-menu-item>
 						<el-menu-item index="courseList">课程管理</el-menu-item>
 						<el-menu-item index="orderList">订单列表</el-menu-item>
+						<el-menu-item index="shareList">分享列表</el-menu-item>
 						<el-menu-item index="checkFeedback">反馈列表</el-menu-item>
 						<!--<el-menu-item index="adminList">管理员列表</el-menu-item>-->
 					</el-submenu>
