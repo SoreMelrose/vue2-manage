@@ -7,7 +7,6 @@
                 <el-option label="有效分享排名" value=1></el-option>
             </el-select>
             <el-input v-model="query.n" placeholder="前n名" type="number" style="width: 200px;"></el-input>
-
             <el-date-picker
                 v-model="query.time"
                 type="date"
@@ -16,9 +15,6 @@
                 value-format="yyyy-MM-dd"
                 >
             </el-date-picker>
-
-
-
             <el-button type="primary" @click="getShare" style="width: 150px;">查询
             </el-button>
         </div>
@@ -27,40 +23,22 @@
                 :data="shareInfo"
                 align="center"
                 style="width: 100%">
-                <el-table-column type="expand">
-                    <template slot-scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="简介">
-                                <span>{{ props.row.introduction }}</span>
-                            </el-form-item>
-                        </el-form>
-                    </template>
-                </el-table-column>
                 <el-table-column
                     label="id"
                     width="60"
                     prop="id">
-                </el-table-column>
-                <el-table-column label="头像" width="90" align="center">
-                    <template slot-scope="scope">
-                        　　　　<img :v-if="scope.row.head" :src="scope.row.head" width="40" height="40" class="head_pic"/>
-                    </template>
                 </el-table-column>
                 <el-table-column
                     label="姓名"
                     prop="realName">
                 </el-table-column>
                 <el-table-column
-                    label="评分"
-                    prop="grade">
+                    label="分享数量"
+                    prop="shareNum">
                 </el-table-column>
                 <el-table-column
-                    label="教授人数"
-                    prop="teachNum">
-                </el-table-column>
-                <el-table-column
-                    label="开课次数"
-                    prop="courseNum">
+                    label="有效分享数量"
+                    prop="activeShareNum">
                 </el-table-column>
             </el-table>
         </div>
@@ -77,7 +55,6 @@
     export default {
         data() {
             return {
-                value2:'',
                 query:{
                     choice:'',
                     n:3,
@@ -122,14 +99,12 @@
                 try {
                     this.query.time=moment(this.query.time).format('YYYY-MM-DD');
                     console.log(this.query);
-
-                    console.log(this.value2);
-                    // const res = await getShare(this.query);
-                    // if (res.code === 200) {
-                    //     console.log(res.data)
-                    // } else {
-                    //     throw new Error('获取数据失败');
-                    // }
+                    const res = await getShare(this.query);
+                    if (res.code === 200) {
+                        console.log(res.data)
+                    } else {
+                        throw new Error('获取数据失败');
+                    }
                 } catch (err) {
                     console.log('获取数据失败', err);
                 }
