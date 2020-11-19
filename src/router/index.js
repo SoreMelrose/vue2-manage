@@ -138,7 +138,6 @@ const router = new Router({
 // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
 
 router.beforeEach((to, from, next) => {
-    console.log(to.path);
     if (to.path === '/login') {
         console.log('login');
         next();
@@ -150,7 +149,6 @@ router.beforeEach((to, from, next) => {
             alert('用户未登录');
             next('/login');
         } else {
-            console.log('have token');
             next();
         }
     }

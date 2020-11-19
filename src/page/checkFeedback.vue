@@ -5,21 +5,18 @@
             <el-table
                 :data="feedData"
                 style="width: 100%">
-                <!--<el-table-column type="expand">-->
-                <!--<template slot-scope="props">-->
-                <!--<el-form label-position="left" inline class="demo-table-expand">-->
-                <!--<el-form-item label="id">-->
-                <!--<span>{{ props.row.id }}</span>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="内容">-->
-                <!--<span>{{ props.row.content }}</span>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="手机号">-->
-                <!--<span>{{ props.row.phone }}</span>-->
-                <!--</el-form-item>-->
-                <!--</el-form>-->
-                <!--</template>-->
-                <!--</el-table-column>-->
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="反馈图片">
+                                <template v-for="(item, index) in props.row.pictures">
+                                    　<img v-image-preview :src="item" width="120" height="120" class="head_pic"/>
+                                </template>
+                            </el-form-item>
+                        </el-form>
+                    </template>
+
+                </el-table-column>
                 <el-table-column
                     label="id"
                     prop="id">

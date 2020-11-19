@@ -10,7 +10,6 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		Object.keys(data).forEach(key => {
 			dataStr += key + '=' + data[key] + '&';
 		});
-
 		if (dataStr !== '') {
 			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
 			url = url + '?' + dataStr;
@@ -20,16 +19,33 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     // 对于支持fetch方法的浏览器，处理如下：
 	if (window.fetch && method === 'fetch') {
         // console.log('fetch');
-		let requestConfig = {
-			credentials: 'include',
-			method: type,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			mode: "cors",
-			cache: "no-cache"
-		};
+        let requestConfig;
+        if(url!=='http://212.64.40.135:8081/api/login') {
+            requestConfig = {
+                credentials: 'include',
+                method: type,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Token': localStorage.getItem('Authorization')
+                },
+                mode: "cors",
+                cache: "no-cache"
+            };
+        }
+        else{
+            requestConfig = {
+                credentials: 'include',
+                method: type,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                mode: "cors",
+                cache: "no-cache"
+            };
+        }
+
 
 		if (type === 'POST'||type==='PUT') {
 			Object.defineProperty(requestConfig, 'body', {
