@@ -9,7 +9,7 @@
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="简介">
-                                <span>{{ props.row.introduction }}</span>
+                                <span v-html="props.row.introduction"></span>
                             </el-form-item>
                         </el-form>
                     </template>

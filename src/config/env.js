@@ -11,12 +11,12 @@ let routerMode = 'hash';
 let baseImgPath;
 
 if (process.env.NODE_ENV === 'development') {
-	baseUrl = '';
+	// baseUrl = '';
 	baseUrl = 'http://212.64.40.135:8081';
     // baseImgPath = '/img/';
 }else{
-	baseUrl = '//elm.cangdu.org';
-    baseImgPath = '//elm.cangdu.org/img/';
+    baseUrl = 'http://212.64.40.135:8081';
+    baseImgPath = 'http://212.64.40.135:8081';
 }
 
 export {

@@ -15,6 +15,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
     "echarts": "^3.5.4",
     "element-ui": "^1.2.9",
     "time-formater": "^1.0.1",
@@ -85,6 +86,7 @@
     "shelljs": "^0.7.6",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0",
+    "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
     "url-loader": "^0.5.8",
     "vue-directive-image-previewer": "^2.2.2",
     "vue-loader": "^11.3.4",

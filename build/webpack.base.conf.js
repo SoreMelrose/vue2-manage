@@ -1,7 +1,7 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+var path = require('path');
+var utils = require('./utils');
+var config = require('../config');
+var vueLoaderConfig = require('./vue-loader.conf');
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -31,7 +31,8 @@ module.exports = {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
+        // include: [resolve('src'), resolve('test')],
+          include: [resolve('src'), resolve('test'),resolve('node_modules/time-formater'),resolve('node_modules/base64-js')],
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -44,7 +45,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test'),resolve('node_modules/time-formater'),resolve('node_modules/base64-js')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
