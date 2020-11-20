@@ -19,13 +19,25 @@
                         <el-input v-model="courseInfo.price" type="number"></el-input>
                     </el-form-item>
                     <el-row class="category_select">
-                        <el-form-item label="选择老师">
-                            <el-select v-model="courseInfo.teacherId" prop="teacherId" style="width:100%;">
+                        <el-form-item label="选择老师" prop="teacherId">
+                            <el-select v-model="courseInfo.teacherId"  style="width:100%;">
                                 <el-option
                                     v-for="item in teacherInfo"
                                     :key="item.id"
                                     :label="item.realName"
                                     :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-row>
+                    <el-row class="category_select">
+                        <el-form-item label="选择员工"  prop="exactCourses[0].staffId">
+                            <el-select v-model="courseInfo.exactCourses[0].staffId"  style="width:100%;">
+                                <el-option
+                                    v-for="item in staffInfo"
+                                    :key="item.userId"
+                                    :label="item.realName"
+                                    :value="item.userId">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -132,7 +144,7 @@
     import headTop from '../components/headTop'
     import {quillEditor} from 'vue-quill-editor'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {addCourse, getTeacher} from '@/api/getData'
+    import {addCourse, getTeacher,getStaff} from '@/api/getData'
 
     export default {
         data() {
@@ -205,6 +217,9 @@
                     'exactCourses[0].openingTime': [
                         {required: true, message: '请选择时间', trigger: 'blur'},
                     ],
+                    'exactCourses[0].staffId': [
+                        {required: true, message: '请选择员工', trigger: 'blur'},
+                    ],
                     teacherId: [
                         {required: true, message: '请选择老师', trigger: 'blur'},
                     ],
@@ -217,6 +232,7 @@
                     ],
                 },
                 teacherInfo: [],
+                staffInfo:[],
                 baseUrl,
                 baseImgPath,
                 categoryOptions: [],
@@ -236,6 +252,13 @@
                         // this.count = countData.count;
                         this.teacherInfo = res.data;
                         console.log(res.data)
+                    } else {
+                        throw new Error('获取数据失败');
+                    }
+                    const res2 = await getStaff({});
+                    if (res2.code === 200) {
+                        this.staffInfo = res2.data;
+                        console.log(res2.data)
                     } else {
                         throw new Error('获取数据失败');
                     }

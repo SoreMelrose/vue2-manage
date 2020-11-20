@@ -9,6 +9,7 @@
 						<!--<el-menu-item index="userList">用户列表</el-menu-item>-->
 						<!--<el-menu-item index="shopList">商家列表</el-menu-item>-->
 						<el-menu-item index="teacherList">教师管理</el-menu-item>
+						<el-menu-item index="staffList">员工管理</el-menu-item>
 						<el-menu-item index="courseList">课程管理</el-menu-item>
 						<el-menu-item index="orderList">订单列表</el-menu-item>
 						<el-menu-item index="shareList">分享列表</el-menu-item>
@@ -19,6 +20,7 @@
 						<template slot="title"><i class="el-icon-plus"></i>添加数据</template>
                         <el-menu-item index="addTeacher">添加老师</el-menu-item>
                         <el-menu-item index="addCourse">添加课程</el-menu-item>
+                        <el-menu-item index="addStaff">添加员工</el-menu-item>
 						<!--<el-menu-item index="addShop">添加商铺</el-menu-item>-->
 						<!--<el-menu-item index="addGoods">添加商品</el-menu-item>-->
 					</el-submenu>

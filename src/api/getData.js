@@ -11,6 +11,8 @@ export const checkFeedback = () => fetch('/api/me/feedback');
 
 export const getTeacher = () => fetch('/api/user/teacher');
 
+export const getStaff = () => fetch('/api/user/staff');
+
 export const getCourse = () => fetch('/api/course/');
 
 export const getOrder = () => fetch('/api/order/all');
@@ -19,15 +21,21 @@ export const getCourseDetail = id => fetch('/api/course/info',{id: id,});
 
 export const updateTeacher = data => fetch('/api/user/teacher', data, 'PUT');
 
+export const updateStaff = data => fetch('/api/user/staff', data, 'PUT');
+
 export const updateCourse = data => fetch('/api/course/info', data, 'PUT');
 
 export const addTeacher = data => fetch('/api/user/teacher', data, 'POST');
+
+export const addStaff = data => fetch('/api/user/staff', data, 'POST');
 
 export const addCourse = data => fetch('/api/course/info', data, 'POST');
 
 export const deleteFeedback = data => fetch('/api/me/feedback' ,data, 'DELETE');
 
 export const deleteTeacher = data => fetch('/api/user/teacher', data, 'DELETE');
+
+export const deleteStaff = data => fetch('/api/user/staff', data, 'DELETE');
 
 export const deleteCourse = data => fetch('/api/course/info' , data, 'DELETE');
 
