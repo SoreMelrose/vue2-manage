@@ -2,18 +2,15 @@
 	<div class="manage_page fillcontain">
 		<el-row style="height: 100%;">
 	  		<el-col :span="4"  style="min-height: 100%; background-color: #324057;">
-				<el-menu :default-openeds="['2','3']" style="min-height: 100%;" theme="dark" router>
+				<el-menu :default-openeds="['2','3','4']" style="min-height: 100%;" theme="dark" router>
 					<el-menu-item index="manage"><i class="el-icon-menu"></i>首页</el-menu-item>
 					<el-submenu index="2">
-						<template slot="title"><i class="el-icon-document"></i>数据管理</template>
-						<!--<el-menu-item index="userList">用户列表</el-menu-item>-->
-						<!--<el-menu-item index="shopList">商家列表</el-menu-item>-->
+						<template slot="title"><i class="el-icon-document"></i>课程管理</template>
+
 						<el-menu-item index="teacherList">教师管理</el-menu-item>
 						<el-menu-item index="staffList">员工管理</el-menu-item>
 						<el-menu-item index="courseList">课程管理</el-menu-item>
 						<el-menu-item index="orderList">订单列表</el-menu-item>
-						<el-menu-item index="shareList">分享列表</el-menu-item>
-						<el-menu-item index="checkFeedback">反馈列表</el-menu-item>
 						<!--<el-menu-item index="adminList">管理员列表</el-menu-item>-->
 					</el-submenu>
 					<el-submenu index="3">
@@ -24,6 +21,13 @@
 						<!--<el-menu-item index="addShop">添加商铺</el-menu-item>-->
 						<!--<el-menu-item index="addGoods">添加商品</el-menu-item>-->
 					</el-submenu>
+                    <el-submenu index="4">
+                        <template slot="title"><i class="el-icon-star-on"></i>平台数据</template>
+                        <el-menu-item index="shareList">分享列表</el-menu-item>
+                        <el-menu-item index="commentList">评论列表</el-menu-item>
+                        <el-menu-item index="checkFeedback">反馈列表</el-menu-item>
+                    <!-- <el-menu-item index="newMember">用户数据</el-menu-item> -->
+                    </el-submenu>
 					<!--<el-submenu index="4">-->
 						<!--<template slot="title"><i class="el-icon-star-on"></i>图表</template>-->
 						<!--<el-menu-item index="visitor">用户分布</el-menu-item>-->

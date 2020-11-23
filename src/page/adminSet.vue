@@ -5,29 +5,22 @@
         <div class="admin_set">
             <ul>
                 <li>
-                    <span>姓名：</span><span>{{adminInfo.user_name}}</span>
+                    <span>姓名：</span><span>{{role}}</span>
                 </li>
                 <li>
-                    <span>注册时间：</span><span>{{adminInfo.create_time}}</span>
+                    <span>管理员 ID：</span><span>{{user_id}}</span>
                 </li>
-                <li>
-                    <span>管理员权限：</span><span>{{adminInfo.admin}}</span>
-                </li>
-                <li>
-                    <span>管理员 ID：</span><span>{{adminInfo.id}}</span>
-                </li>
-                <li>
-                    <span>更换头像：</span>
-                    <el-upload
-                      class="avatar-uploader"
-                      :action="baseUrl + '/admin/update/avatar/' + adminInfo.id"
-                      :show-file-list="false"
-                      :on-success="uploadImg"
-                      :before-upload="beforeImgUpload">
-                      <img v-if="adminInfo.avatar" :src="baseImgPath + adminInfo.avatar" class="avatar">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </li>    
+                <el-form >
+                    <el-form-item  prop="input1">
+                        <el-input v-model="input1" placeholder="输入新密码" style="padding: 10px;"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="input2">
+                        <el-input v-model="input2" placeholder="再次输入" style="padding: 10px;"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div align="center" style="padding: 20px;">
+                    <el-button type="success" @click="submit">重置密码</el-button>
+                </div>
             </ul>
         </div>
     </div>
@@ -36,40 +29,77 @@
 <script>
 	import headTop from '../components/headTop'
     import {mapState} from 'vuex'
+    import {changeCode} from '@/api/getData'
     import {baseUrl, baseImgPath} from '@/config/env'
 
     export default {
         data(){
             return {
+                input1:'',
+                input2:'',
+                user_id:'',
+                role:'',
                 baseUrl,
                 baseImgPath,
+                rules: {
+                    input1: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                    ],
+                    input2: [
+                        { required: true, message: '请再次输入密码', trigger: 'blur' }
+                    ],
+
+                },
             }
         },
     	components: {
     		headTop,
     	},
-        computed: {
-            ...mapState(['adminInfo']),
+        // computed: {
+        //     ...mapState(['adminInfo']),
+        // },
+        created() {
+            this.initData();
         },
         methods: {
-            uploadImg(res, file) {
-                if (res.status == 1) {
-                    this.adminInfo.avatar = res.image_path;
-                }else{
-                    this.$message.error('上传图片失败！');
+            initData() {
+                this.user_id=localStorage.getItem('user_id');
+                this.role=localStorage.getItem('role');
+                // console.log(this.adminInfo);
+            },
+            submit(){
+                if(this.input1!==this.input2)
+                {
+                    this.$message({
+                        message: '两次密码不同！'
+                    });
+                }
+                else{
+                    this.confirm();
                 }
             },
-            beforeImgUpload(file) {
-                const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-                if (!isRightType) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
+            async confirm() {
+                try {
+                    const res = await changeCode({
+                        password:this.input1,
+                        user_id:this.user_id,
+                        username:this.role
+                    });
+                    if (res.code === 200) {
+                        this.$message({
+                            type: 'success',
+                            message: '重置成功'
+                        });
+                        localStorage.clear();
+                        this.$router.push('/login');
+                        console.log(res.data)
+                    } else {
+                        throw new Error('获取数据失败');
+                    }
+                    // this.getFoods();
+                } catch (err) {
+                    console.log('获取数据失败', err);
                 }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isRightType && isLt2M;
             },
         },
     }
@@ -86,7 +116,7 @@
     .admin_set{
         width: 60%;
         background-color: #F9FAFC;
-        min-height: 400px;
+        min-height: 170px;
         margin: 20px auto 0;
         border-radius: 10px;
         ul > li{

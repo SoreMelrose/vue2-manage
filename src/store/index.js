@@ -21,7 +21,8 @@ const mutations = {
         state.adminInfo = info;
         state.token=info.Token;
         localStorage.setItem('Authorization', info.Token);
-
+        localStorage.setItem('user_id', info.user_id);
+        localStorage.setItem('role', info.role);
     }
 };
 

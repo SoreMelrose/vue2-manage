@@ -1,125 +1,94 @@
 <template>
     <div class="fillcontain">
         <head-top></head-top>
+        <p style="padding-left: 30px;padding-top: 20px">按课程查询订单</p>
+        <div style="padding:20px;display: flex;justify-content: space-around">
+            <el-select v-model="searchId"  style="width:100%;padding-right:60px"  placeholder="请选择课程名">
+                <el-option
+                    v-for="item in courseAll"
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+            </el-date-picker>
+            <el-button type="primary" @click="Search" style="width: 150px;">查询
+            </el-button>
+        </div>
         <div class="table_container" v-loading="finishLoading">
             <el-table
-                :data="teacherInfo"
-                align="center"
+                :data="commentInfo"
                 style="width: 100%">
-                <el-table-column type="expand">
-                    <template slot-scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="简介">
-                                <span>{{ props.row.introduction }}</span>
-                            </el-form-item>
-                        </el-form>
-                    </template>
-                </el-table-column>
+                <!--<el-table-column type="expand">-->
+                    <!--<template slot-scope="props">-->
+                        <!--<el-form label-position="left" inline class="demo-table-expand">-->
+                            <!--<el-form-item label="课程ID">-->
+                                <!--<span>{{ props.row.id }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="简介">-->
+                                <!--<span v-html="props.row.introduction"></span>-->
+                            <!--</el-form-item>-->
+                        <!--</el-form>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column
-                    label="id"
-                    width="60"
+                    label="ID"
                     prop="id">
                 </el-table-column>
-                <el-table-column label="头像" width="90" align="center">
-                    <template slot-scope="scope">
-                        <img :v-if="scope.row.head" :src="scope.row.head" width="40" height="40" class="head_pic"/>　　
-                    </template>
+                <el-table-column
+                    label="评价内容"
+                    prop="content">
                 </el-table-column>
                 <el-table-column
                     label="姓名"
-                    prop="realName">
+                    prop="user.realName">
                 </el-table-column>
                 <el-table-column
-                    label="职称"
-                    prop="ranks">
+                    label="昵称"
+                    prop="user.nickname">
                 </el-table-column>
                 <el-table-column
-                    label="评分"
-                    prop="grade">
+                    label="手机号"
+                    prop="user.phone">
                 </el-table-column>
-                <el-table-column
-                    label="教授人数"
-                    prop="teachNum">
-                </el-table-column>
-                <el-table-column
-                    label="开课次数"
-                    prop="courseNum">
-                </el-table-column>
-                <el-table-column label="操作" width="200">
+
+                <el-table-column label="操作" width="300"  key="option" align="center">
                     <template slot-scope="scope">
                         <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑
+                            @click="handleJudge(scope.$index, scope.row)">审批
                         </el-button>
                         </el-button>
                         <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除
+                            @click="handleModify(scope.$index, scope.row)">修改
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <!--<div class="Pagination">-->
-            <!--<el-pagination-->
-            <!--@size-change="handleSizeChange"-->
-            <!--:current-page="currentPage"-->
-            <!--:page-size="20"-->
-            <!--layout="total, prev, pager, next"-->
-            <!--:total="count">-->
-            <!--</el-pagination>-->
-            <!--</div>-->
-            <el-dialog title="修改老师信息" v-model="dialogFormVisible" v-loading="loading" element-loading-text="图片上传中">
-                <el-form :model="selectTable">
-                    <el-form-item label="老师姓名" label-width="100px">
-                        <el-input v-model="selectTable.realName" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="职称" label-width="100px">
-                        <el-input v-model="selectTable.ranks" ></el-input>
-                    </el-form-item>
-
-                    <el-form-item label="评分" label-width="100px">
-                        <el-input v-model="selectTable.grade"></el-input>
-                    </el-form-item>
-                    <el-form-item label="教授人数" label-width="100px">
-                        <el-input v-model="selectTable.teachNum"></el-input>
-                    </el-form-item>
-                    <el-form-item label="开课次数" label-width="100px">
-                        <el-input v-model="selectTable.courseNum"></el-input>
-                    </el-form-item>
-                    <el-form-item label="老师简介" label-width="100px">
-                        <el-input v-model="selectTable.introduction"></el-input>
-                    </el-form-item>
-                    <el-form-item label="老师照片" label-width="100px">
-                        <el-upload
-                            class="avatar-uploader"
-                            :action="baseUrl + '/api/file/upload'"
-                            :limit="1"
-                            :show-file-list="false"
-                            :on-change="imageUpload"
-                            :on-success="handleServiceAvatarScucess"
-                            :before-upload="beforeAvatarUpload">
-
-                            <img v-if="selectTable.head" :src="selectTable.head" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="update">确 定</el-button>
-                </div>
-            </el-dialog>
-
             <el-dialog
                 title="提示"
                 :visible.sync="dialogVisible"
                 width="30%">
-                <span>确认删除此老师</span>
+                <span>审核通过将会展现给用户,确定通过审核吗</span>
+                <!--<span>{{showMessage}}</span>-->
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
+                <el-button type="primary" @click="confirm(3)">不通过</el-button>
+                <el-button type="primary" @click="confirm(2)">通过</el-button>
               </span>
+            </el-dialog>
+
+            <el-dialog title="修改评论" v-model="dialogFormVisibleChange">
+                <el-form :model="content">
+                    <el-form-item label="内容" label-width="100px">
+                        <el-input v-model="content" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisibleChange = false">取 消</el-button>
+                    <el-button type="primary" @click="update">确 定</el-button>
+                </div>
             </el-dialog>
         </div>
     </div>
@@ -128,23 +97,28 @@
 <script>
     import headTop from '../components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getTeacher, updateTeacher,deleteTeacher} from '@/api/getData'
+    import {getcomments, updatecComments,getCourse,changeComments} from '@/api/getData'
     import {mapActions, mapState} from 'vuex'
+
     export default {
         data() {
             return {
-                deleteId: '',
+                chooseId: '',
+                showMessage:'通过审核吗？',
+                deleteChoice: 0,
                 dialogVisible: false,
+                dialogFormVisibleChange:false,
+                changeId:'',
                 finishLoading: true,
                 loading: false,
                 baseUrl,
-                teacherInfo: [],
-                dialogFormVisible: false,
+                userId:'',
+                courseAll:[],
+                commentInfo: [],
+                // dialogFormVisible: false,
                 selectTable: {},
-                categoryOptions: [],
-                selectedCategory: [],
-                address: {},
-
+                content:'',
+                searchId:''
             }
         },
         created() {
@@ -153,14 +127,15 @@
         components: {
             headTop,
         },
-
         methods: {
             async initData() {
                 try {
-                    const res = await getTeacher({});
+                    const res = await getcomments('all');
+                    const res2 = await getCourse();
                     if (res.code === 200) {
                         // this.count = countData.count;
-                        this.teacherInfo = res.data;
+                        this.commentInfo = res.data;
+                        this.courseAll=res2.data;
                         this.finishLoading = false;
                         console.log(res.data)
                     } else {
@@ -171,14 +146,43 @@
                     console.log('获取数据失败', err);
                 }
             },
-            async confirm() {
-                this.dialogVisible=false;
+            async Search(){
+                try{
+                    this.finishLoading=true;
+                    const res = await getcomments(this.searchId);
+                    if (res.code === 200) {
+                        // this.count = countData.count;
+                        this.commentInfo=res.data;
+                        this.finishLoading=false;
+                        console.log(res.data)
+                    }else{
+                        throw new Error('获取数据失败');
+                    }
+                    // this.getFoods();
+                }catch(err){
+                    console.log('获取数据失败', err);
+                }
+            },
+            handleJudge(index, row) {
+                this.dialogVisible=true;
+                this.chooseId=row.id;
+                // this.dialogFormVisible = true;
+            },
+            handleModify(index, row) {
+                this.dialogFormVisibleChange = true;
+                this.changeId = row.id;
+                this.content=row.content;
+                this.userId=row.user.userId;
+                this.deleteChoice = 1;
+            },
+            async confirm(type) {
+                this.dialogVisible = false;
                 try {
-                    const res = await deleteTeacher({id:this.deleteId});
+                    const res = await updatecComments({id: this.chooseId, status: type});
                     if (res.code === 200) {
                         this.$message({
                             type: 'success',
-                            message: '删除老师成功'
+                            message: '审核通过'
                         });
                         this.initData();
                         console.log(res.data)
@@ -190,20 +194,28 @@
                     console.log('获取数据失败', err);
                 }
             },
-            imageUpload(file) {
-                this.loading = file.status !== 'success';
-            },
-            handleEdit(index, row) {
-                this.selectTable = row;
-                this.address.address = row.address;
-                this.dialogFormVisible = true;
-                // if (!this.categoryOptions.length) {
-                //     this.getCategory();
-                // }
-            },
-            handleDelete(index, row) {
-                this.dialogVisible = true;
-                this.deleteId = row.id;
+            async update(type) {
+                this.dialogVisible = false;
+                try {
+                    const res = await changeComments({
+                        id: this.changeId,
+                        content: this.content,
+                        userId:this.userId
+                    });
+                    if (res.code === 200) {
+                        this.$message({
+                            type: 'success',
+                            message: '审核通过'
+                        });
+                        this.initData();
+                        console.log(res.data)
+                    } else {
+                        throw new Error('获取数据失败');
+                    }
+                    // this.getFoods();
+                } catch (err) {
+                    console.log('获取数据失败', err);
+                }
             },
             handleServiceAvatarScucess(res, file) {
                 console.log(res);

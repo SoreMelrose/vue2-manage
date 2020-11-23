@@ -15,11 +15,19 @@ export const getStaff = () => fetch('/api/user/staff');
 
 export const getCourse = () => fetch('/api/course/');
 
-export const getOrder = () => fetch('/api/order/all');
+export const getOrder = courseId => fetch('/api/order/all',{courseId:courseId});
 
 export const getCourseDetail = id => fetch('/api/course/info',{id: id,});
 
+export const getcomments = courseId => fetch('/api/me/comments',{courseId: courseId,});
+
+export const changeCode = data => fetch('/api/account', data, 'PUT');
+
 export const updateTeacher = data => fetch('/api/user/teacher', data, 'PUT');
+
+export const updatecComments = data => fetch('/api/me/comments', data, 'PUT');
+
+export const changeComments = data => fetch('/api/me/comments/info', data, 'PUT');
 
 export const updateStaff = data => fetch('/api/user/staff', data, 'PUT');
 

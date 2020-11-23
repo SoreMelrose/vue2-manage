@@ -8,15 +8,14 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="课程ID">
+                                <span>{{ props.row.id }}</span>
+                            </el-form-item>
                             <el-form-item label="简介">
                                 <span v-html="props.row.introduction"></span>
                             </el-form-item>
                         </el-form>
                     </template>
-                </el-table-column>
-                <el-table-column
-                    label="id"
-                    prop="id">
                 </el-table-column>
                 <el-table-column
                     label="名称"
@@ -60,6 +59,11 @@
                             @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>
                         <el-tag type="warning"  v-if="scope.row.status===-1">已下架</el-tag>
+                        <el-button
+                            v-if="scope.row.status===-1"
+                            size="mini"
+                            @click="handleOn(scope.$index, scope.row)">重新上架
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -67,7 +71,7 @@
                 title="提示"
                 :visible.sync="dialogVisible"
                 width="30%">
-                <span>{{deleteChoice===0?'确认下架此课程':'确认删除此课程'}}</span>
+                <span>{{showMessage}}</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="confirm">确 定</el-button>
@@ -87,6 +91,7 @@
         data() {
             return {
                 deleteId: '',
+                showMessage:'',
                 deleteChoice: 0,
                 dialogVisible: false,
                 finishLoading: true,
@@ -143,15 +148,25 @@
                 //     this.getCategory();
                 // }
             },
+
+            // 0下架/1删除/2上架
             handleOff(index, row) {
                 this.dialogVisible = true;
                 this.deleteId = row.id;
                 this.deleteChoice = 0;
+                this.showMessage = '确认下架课程？';
+            },
+            handleOn(index, row) {
+                this.dialogVisible = true;
+                this.deleteId = row.id;
+                this.deleteChoice = 2;
+                this.showMessage = '确认上架课程？';
 
             }, handleDelete(index, row) {
                 this.dialogVisible = true;
                 this.deleteId = row.id;
                 this.deleteChoice = 1;
+                this.showMessage = '确认删除课程？';
             },
             async confirm() {
                 this.dialogVisible = false;

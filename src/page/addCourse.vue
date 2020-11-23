@@ -218,10 +218,10 @@
                         {required: true, message: '请选择时间', trigger: 'blur'},
                     ],
                     'exactCourses[0].staffId': [
-                        {required: true, message: '请选择员工', trigger: 'blur'},
+                        {required: true, message: '请选择员工', trigger: 'blur',type:'number'},
                     ],
                     teacherId: [
-                        {required: true, message: '请选择老师', trigger: 'blur'},
+                        {required: true, message: '请选择老师', trigger: 'blur',type:'number'},
                     ],
                     introduction: [
                         {required: true, message: '请输入个人简介', trigger: 'blur'},

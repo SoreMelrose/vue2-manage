@@ -1,6 +1,20 @@
 <template>
     <div class="fillcontain">
         <head-top></head-top>
+        <p style="padding-left: 30px;padding-top: 20px">按课程查询订单</p>
+        <div style="padding:20px;display: flex;justify-content: space-around">
+            <el-select v-model="searchId"  style="width:100%;padding-right:60px"  placeholder="请选择课程名">
+                <el-option
+                    v-for="item in courseAll"
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+            </el-date-picker>
+            <el-button type="primary" @click="Search" style="width: 150px;">查询
+            </el-button>
+        </div>
         <div class="table_container" v-loading="finishLoading">
             <el-table
                 :data="orderInfo"
@@ -8,8 +22,17 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="订单ID">
+                                <span>{{ props.row.id }}</span>
+                            </el-form-item>
                             <el-form-item label="报名信息ID">
                                 <span>{{ props.row.regId }}</span>
+                            </el-form-item>
+                            <el-form-item label="课程ID">
+                                <span>{{ props.row.generalId }}</span>
+                            </el-form-item>
+                            <el-form-item label="期次ID">
+                                <span>{{ props.row.courseId }}</span>
                             </el-form-item>
                             <el-form-item label="报名信息ID">
                                 <span>{{ props.row.regId }}</span>
@@ -23,11 +46,7 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    label="订单ID"
-                    prop="id"
-                    align="center">
-                </el-table-column>
+
                 <el-table-column
                     label="姓名"
                     prop="realName"
@@ -36,6 +55,7 @@
                 <el-table-column
                     label="联系方式"
                     prop="phone"
+                    width="150px"
                     align="center">
                 </el-table-column>
                 <el-table-column
@@ -49,6 +69,11 @@
                     prop="sumPrice"
                     align="center">
                 </el-table-column>
+                <el-table-column
+                    label="实付价格"
+                    prop="realPrice"
+                    align="center">
+                </el-table-column>
 
                 <el-table-column
                     label="创建时间"
@@ -57,11 +82,6 @@
                     width="250">
                     <template slot-scope="scope">{{scope.row.gmtCreate| dateYMDHMSFormat}}</template>
 
-                </el-table-column>
-                <el-table-column
-                    label="报名信息ID"
-                    prop="regId"
-                    align="center">
                 </el-table-column>
                 <el-table-column
                     label="分享人ID"
@@ -73,7 +93,7 @@
                     <template slot-scope="scope">
                         <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="handleJump(scope.$index, scope.row)">查看课程详情</el-button>
                         </el-button>
                         <el-button
                             size="mini"
@@ -82,62 +102,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!--<div class="Pagination">-->
-            <!--<el-pagination-->
-            <!--@size-change="handleSizeChange"-->
-            <!--:current-page="currentPage"-->
-            <!--:page-size="20"-->
-            <!--layout="total, prev, pager, next"-->
-            <!--:total="count">-->
-            <!--</el-pagination>-->
-            <!--</div>-->
-            <el-dialog title="修改老师信息" v-model="dialogFormVisible" v-loading="loading" element-loading-text="图片上传中">
-                <el-form :model="selectTable">
-                    <el-form-item label="老师姓名" label-width="100px">
-                        <el-input v-model="selectTable.realName" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <!--<el-form-item label="详细地址" label-width="100px">-->
-                    <!--<el-autocomplete-->
-                    <!--v-model="address.address"-->
-                    <!--:fetch-suggestions="querySearchAsync"-->
-                    <!--placeholder="请输入地址"-->
-                    <!--style="width: 100%;"-->
-                    <!--@select="addressSelect"-->
-                    <!--&gt;</el-autocomplete>-->
-                    <!--<span>当前城市：{{city.name}}</span>-->
-                    <!--</el-form-item>-->
-                    <el-form-item label="评分" label-width="100px">
-                        <el-input v-model="selectTable.grade"></el-input>
-                    </el-form-item>
-                    <el-form-item label="教授人数" label-width="100px">
-                        <el-input v-model="selectTable.teachNum"></el-input>
-                    </el-form-item>
-                    <el-form-item label="开课次数" label-width="100px">
-                        <el-input v-model="selectTable.courseNum"></el-input>
-                    </el-form-item>
-                    <el-form-item label="老师简介" label-width="100px">
-                        <el-input v-model="selectTable.introduction"></el-input>
-                    </el-form-item>
-                    <el-form-item label="老师照片" label-width="100px">
-                        <el-upload
-                            class="avatar-uploader"
-                            :action="baseUrl + '/api/file/upload'"
-                            :limit="1"
-                            :show-file-list="false"
-                            :on-change="imageUpload"
-                            :on-success="handleServiceAvatarScucess"
-                            :before-upload="beforeAvatarUpload">
-
-                            <img v-if="selectTable.head" :src="selectTable.head" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="update">确 定</el-button>
-                </div>
-            </el-dialog>
         </div>
     </div>
 </template>
@@ -145,13 +109,15 @@
 <script>
     import headTop from '../components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getOrder,updateTeacher} from '@/api/getData'
+    import {getOrder,updateTeacher,getCourse} from '@/api/getData'
     import {mapActions, mapState} from 'vuex'
     export default {
         data(){
             return{
+                searchId:'',
                 finishLoading:true,
                 loading: false,
+                courseAll:[],
                 baseUrl,
                 orderInfo:[],
                 dialogFormVisible: false,
@@ -170,7 +136,27 @@
         methods:{
             async initData(){
                 try{
-                    const res = await getOrder({});
+                    const res = await getOrder('all');
+                    const res2 = await getCourse();
+
+                    if (res.code === 200) {
+                        // this.count = countData.count;
+                        this.orderInfo=res.data;
+                        this.courseAll=res2.data;
+                        this.finishLoading=false;
+                        console.log(res.data)
+                    }else{
+                        throw new Error('获取数据失败');
+                    }
+                    // this.getFoods();
+                }catch(err){
+                    console.log('获取数据失败', err);
+                }
+            },
+            async Search(){
+                try{
+                    this.finishLoading=true;
+                    const res = await getOrder(this.searchId);
                     if (res.code === 200) {
                         // this.count = countData.count;
                         this.orderInfo=res.data;
@@ -189,6 +175,12 @@
             // },
             imageUpload(file){
                 this.loading = file.status !== 'success';
+            },
+            handleJump(index, row){
+                this.$router.push({
+                    path: "courseDetail",
+                    query: {id: row.generalId}
+                });
             },
             handleEdit(index, row) {
                 this.selectTable = row;
