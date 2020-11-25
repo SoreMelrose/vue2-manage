@@ -79,6 +79,7 @@
                             class="avatar-uploader"
                             :action="baseUrl + '/api/file/upload'"
                             :show-file-list="false"
+                            :data="{choice:0}"
                             :limit="1"
                             :on-change="imageUpload"
                             :on-success="handleShopAvatarSuccess"
@@ -96,6 +97,7 @@
                 class="avatar-uploader2"
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
+                :data="{choice:0}"
                 :show-file-list="false"
                 :on-success="uploadSuccessEdit"
                 :on-change="quillUpload"
@@ -106,6 +108,7 @@
                 class="avatar-uploader3"
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
+                :data="{choice:0}"
                 :show-file-list="false"
                 :on-change="quillUpload"
                 :on-success="uploadSuccessEditVideo"
@@ -123,9 +126,9 @@
 
         <el-form>
             <el-form-item class="button_submit" style="text-align:center;">
-                <el-button type="" @click="back" style="width: 150px;margin-top: 60px">返回</el-button>
+                <el-button type="" @click="back" style="width: 150px;margin-top: 100px">返回</el-button>
                 <el-button type="primary" @click="submitForm('courseInfo')"
-                           style="width: 150px;margin-top: 20px">提交课程
+                           style="width: 150px;margin-top: 100px">提交课程
                 </el-button>
             </el-form-item>
         </el-form>
@@ -155,6 +158,9 @@
     ];
     import moment from 'moment';
     import headTop from '../components/headTop'
+    import * as Quill from 'quill'
+    import Video from '../quill/video'
+    Quill.register(Video, true)
     import {quillEditor} from 'vue-quill-editor'
     import {baseUrl, baseImgPath} from '@/config/env'
     import {addCourse, getTeacher,getStaff} from '@/api/getData'
@@ -191,7 +197,7 @@
                     }
                 },
                 courseInfo: {
-                    introduction: '',
+                    introduction: '<h3>请输入课程详情</h3>',
                     exactCourses: [
                         {}
                     ],
@@ -435,7 +441,7 @@
     }
 
     .editer {
-        height: 350px;
+        min-height: 500px;
     }
 
     .edit_container {

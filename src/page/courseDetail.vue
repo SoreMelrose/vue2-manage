@@ -48,6 +48,7 @@
                             class="avatar-uploader"
                             :action="baseUrl + '/api/file/upload'"
                             :show-file-list="false"
+                            :data="{choice:0}"
                             :limit="1"
                             :on-change="imageUpload"
                             :on-success="handleShopAvatarSuccess"
@@ -57,40 +58,47 @@
                         </el-upload>
                     </el-form-item>
 
-                    <template>
-                        <!-- 图片上传组件辅助-->
-                        <el-upload
-                            class="avatar-uploader2"
-                            :action="baseUrl + '/api/file/upload'"
-                            name="file"
-                            :show-file-list="false"
-                            :on-success="uploadSuccessEdit"
-                            :before-upload="beforeUploadEdit"
-                        >
-                        </el-upload>
-                        <div>
-                            <quill-editor class="editer" v-model="courseInfo.introduction" ref="myQuillEditor"
-                                          style="height: 300px;width: 90%;position: relative;left: 5%" :options="editorOption" @ready="onEditorReady($event)">
-                            </quill-editor>
-                        </div>
-                    </template>
 
-                    <!--<el-form-item label="课程简介" prop="introduction">-->
-                        <!--<el-input-->
-                            <!--type="textarea"-->
-                            <!--:autosize="{ minRows: 4, maxRows: 50}"-->
-                            <!--v-model="courseInfo.introduction">-->
-                        <!--</el-input>-->
-                    <!--</el-form-item>-->
-
-
-                    <el-form-item class="button_submit" style="text-align:center;margin-top: 100px">
-                        <el-button type="" @click="back" style="width: 150px;margin-top: 20px">返回</el-button>
-                        <el-button type="primary" @click="submitForm('courseInfo')" style="width: 150px;margin-top: 20px">修改课程</el-button>
-                    </el-form-item>
                 </el-form>
             </el-col>
         </el-row>
+        <template>
+            <!-- 图片上传组件辅助-->
+            <el-upload
+                class="avatar-uploader2"
+                :action="baseUrl + '/api/file/upload'"
+                name="file"
+                :data="{choice:0}"
+                :show-file-list="false"
+                :on-change="quillUpload"
+                :on-success="uploadSuccessEdit"
+                :before-upload="beforeUploadEdit"
+            >
+            </el-upload>
+            <el-upload
+                class="avatar-uploader3"
+                :action="baseUrl + '/api/file/upload'"
+                name="file"
+                :data="{choice:0}"
+                :show-file-list="false"
+                :on-change="quillUpload"
+                :on-success="uploadSuccessEditVideo"
+                :before-upload="beforeAvatarUploadVideo"
+            >
+            </el-upload>
+            <div>
+                <quill-editor class="editer" v-model="courseInfo.introduction" ref="myQuillEditor"
+                              v-loading="uploadLoading" element-loading-text="上传中"
+                              style="height: 300px;width: 90%;position: relative;left: 5%" :options="editorOption" @ready="onEditorReady($event)">
+                </quill-editor>
+            </div>
+        </template>
+        <el-form>
+        <el-form-item class="button_submit" style="text-align:center;margin-top: 100px">
+            <el-button type="" @click="back" style="width: 150px;margin-top: 100px">返回</el-button>
+            <el-button type="primary" @click="submitForm('courseInfo')" style="width: 150px;margin-top: 100px">修改课程</el-button>
+        </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -116,6 +124,9 @@
         ['clean']                                         // remove formatting button
     ];
     import headTop from '../components/headTop'
+    import * as Quill from 'quill'
+    import Video from '../quill/video'
+    Quill.register(Video, true);
     import {quillEditor} from 'vue-quill-editor'
     import {baseUrl, baseImgPath} from '@/config/env'
     import {getCourseDetail,updateCourse} from '@/api/getData'
@@ -124,6 +135,7 @@
             return {
                 city: {},
                 loading:false,
+                uploadLoading: false,
                 quillUpdateImg: false,
                 editorOption: {
                     placeholder: '',
@@ -224,10 +236,43 @@
             back(){
                 this.$router.go(-1);//返回上一层
             },
+            quillUpload(file) {
+                this.uploadLoading = file.status !== 'success';
+            },
+            beforeAvatarUploadVideo(file) {
+                const isRightType = (file.type === 'video/mp4') || (file.type === 'video/avi');
+                // const isLt2M = file.size / 1024 / 1024 < 4;
+                if (!isRightType) {
+                    this.$message.error('上传头像图片只能是视频格式!');
+                }
+                // if (!isLt2M) {
+                //     this.$message.error('上传头像图片大小不能超过 4MB!');
+                // }
+                return isRightType;
+            },
             // 上传图片前
             beforeUploadEdit(res, file) {
                 // 显示loading动画
                 this.quillUpdateImg = true
+            },
+            uploadSuccessEditVideo(res, file) {
+                // res为图片服务器返回的数据
+                // 获取富文本组件实例
+                let quill = this.$refs.myQuillEditor.quill;
+                // 如果上传成功
+                if (res.code === 200) {
+                    // 获取光标所在位置
+                    let length = quill.getSelection().index;
+                    // 插入图片  res.data.url为服务器返回的图片地址
+                    quill.insertEmbed(length, 'video', res.data);
+                    // 调整光标到最后
+                    quill.setSelection(length + 1);
+                    console.log(this.courseInfo.introduction);
+                } else {
+                    this.$message.error('视频插入失败')
+                }
+                // loading动画消失
+                this.quillUpdateImg = false
             },
             // 上传图片成功
             uploadSuccessEdit(res, file) {
@@ -333,7 +378,7 @@
         font-size: 0;
     }
     .editer {
-        height: 350px;
+        min-height: 500px;
     }
     .demo-table-expand label {
         width: 90px;
