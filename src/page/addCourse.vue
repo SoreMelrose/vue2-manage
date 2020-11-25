@@ -115,8 +115,7 @@
                 :before-upload="beforeAvatarUploadVideo"
             >
             </el-upload>
-
-            <div >
+            <div>
                 <quill-editor class="editer" v-model="courseInfo.introduction" ref="myQuillEditor"
                               v-loading="uploadLoading" element-loading-text="上传中"
                               style="height: 300px;width: 90%;position: relative;left: 5%" :options="editorOption" @ready="onEditorReady($event)">
@@ -127,6 +126,12 @@
         <el-form>
             <el-form-item class="button_submit" style="text-align:center;">
                 <el-button type="" @click="back" style="width: 150px;margin-top: 100px">返回</el-button>
+                <el-button type="success" @click="saveForm"
+                           style="width: 150px;margin-top: 100px">保存草稿
+                </el-button>
+                <el-button type="danger" @click="clearInfo"
+                           style="width: 150px;margin-top: 100px">清空
+                </el-button>
                 <el-button type="primary" @click="submitForm('courseInfo')"
                            style="width: 150px;margin-top: 100px">提交课程
                 </el-button>
@@ -263,8 +268,12 @@
                 categoryOptions: [],
             }
         },
+
         created() {
             this.initData();
+            const tmp = JSON.parse(localStorage.getItem('tempCourse'));
+            if(tmp!==''&&tmp!==null)
+            this.courseInfo=tmp;
         },
         methods: {
             back() {
@@ -291,6 +300,29 @@
                 } catch (err) {
                     console.log('获取数据失败', err);
                 }
+            },
+            clearInfo(){
+                this.courseInfo=  {
+                    introduction: '<h3>请输入课程详情</h3>',
+                    exactCourses: [
+                        {}
+                    ],
+                    otherPicture: '',
+                    video: '',
+                    category: ''
+                };
+                localStorage.remove("tempCourse");
+                this.$message({
+                    type: 'success',
+                    message: '清空成功'
+                });
+            },
+            saveForm(){
+                localStorage.setItem("tempCourese",JSON.stringify(this.courseInfo));
+                this.$message({
+                    type: 'success',
+                    message: '保存成功'
+                });
             },
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {

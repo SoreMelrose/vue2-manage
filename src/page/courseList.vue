@@ -240,7 +240,7 @@
 </script>
 
 <style lang="less">
-    @import '../style/mixin';
+    @import '../style/mixin.less';
 
     .demo-table-expand {
         font-size: 0;
