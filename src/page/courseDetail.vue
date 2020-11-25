@@ -37,10 +37,10 @@
                     <el-form-item label="课程时数" prop="classHour" v-if="courseInfo.exactCourses">
                         <el-input v-model="courseInfo.classHour" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="已买人数" prop="buyNum" v-if="courseInfo.exactCourses">
+                    <el-form-item label="已买人数" prop="exactCourses[0].buyNum" v-if="courseInfo.exactCourses">
                         <el-input v-model="courseInfo.exactCourses[0].buyNum" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="课程最大人数" prop="openingNum" v-if="courseInfo.exactCourses">
+                    <el-form-item label="课程最大人数" prop="exactCourses[0].openingNum" v-if="courseInfo.exactCourses">
                         <el-input v-model="courseInfo.exactCourses[0].openingNum" type="number"></el-input>
                     </el-form-item>
                     <el-form-item label="课程主图" v-loading="loading" element-loading-text="图片上传中">
@@ -57,8 +57,6 @@
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
-
-
                 </el-form>
             </el-col>
         </el-row>
@@ -165,9 +163,8 @@
                         {required: true, message: '请输入课程标题', trigger: 'blur'},
                     ],
                     price: [
-                        {required: true, message: '请输入价格', trigger: 'blur'},
+                        {required: true, message: '请输入价格', trigger: 'blur',type:"number"},
                     ],
-
                     serveice: [
                         {required: true, message: '请输入课程服务', trigger: 'blur'},
                     ],
@@ -178,16 +175,16 @@
                         {required: true, message: '请输入课程地址', trigger: 'blur'},
                     ],
                     classHour: [
-                        {required: true, message: '请输入课程时数', trigger: 'blur'},
+                        {required: true, message: '请输入课程时数', trigger: 'blur',type:"number"},
                     ],
                     'exactCourses[0].place': [
                         {required: true, message: '请输入地址', trigger: 'blur'},
                     ],
                     'exactCourses[0].buyNum': [
-                        {required: true, message: '请输入购买人数', trigger: 'blur'},
+                        {required: true, message: '请输入购买人数', trigger: 'blur',type:"number"},
                     ],
                     'exactCourses[0].openingNum': [
-                        {required: true, message: '请输入总人数', trigger: 'blur'},
+                        {required: true, message: '请输入总人数', trigger: 'blur',type:"number"},
                     ],
                     'exactCourses[0].openingTime': [
                         {required: true, message: '请选择时间', trigger: 'blur'},
@@ -211,6 +208,9 @@
         created(){
             this.initData();
         },
+        activated(){
+            this.initData();
+        },
         methods: {
             async initData(){
                 console.log(this.$route.query.id);
@@ -220,7 +220,7 @@
                         // this.count = countData.count;
                         this.courseInfo=res.data;
                         this.courseInfo.category=this.courseInfo.category.toString();
-                        console.log(res.data)
+                        console.log(res.data.state);
                         console.log(res.data.exactCourses[0].place);
                     }else{
                         throw new Error('获取数据失败');
