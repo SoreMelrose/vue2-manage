@@ -149,6 +149,10 @@
                                     } else {
                                         this.quill.format('image', false);
                                     }
+                                },
+                                'video':function(val){
+                                    console.log('video');
+                                    document.querySelector('.avatar-uploader3 input').click()
                                 }
                             }
                         }

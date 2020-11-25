@@ -68,7 +68,9 @@
 		                        type: 'success',
 		                        message: '登录成功'
 		                    });
-							this.$router.push('manage')
+							this.loading=true;
+							this.$router.push('manage');
+                            this.loading=false;
 						}else{
 							this.$message({
 		                        type: 'error',

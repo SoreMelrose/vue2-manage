@@ -5,17 +5,23 @@
         <div class="admin_set">
             <ul>
                 <li>
-                    <span>姓名：</span><span>{{role}}</span>
+                    <span>权限：</span><span>{{role}}</span>
                 </li>
                 <li>
                     <span>管理员 ID：</span><span>{{user_id}}</span>
                 </li>
-                <el-form >
+                <el-form :model="info" :rules="rules">
+                    <el-form-item  prop="username">
+                        <el-input v-model="info.username" placeholder="输入用户名" style="padding: 10px;"></el-input>
+                    </el-form-item>
+                    <el-form-item  prop="old">
+                        <el-input v-model="info.old" placeholder="输入原密码" style="padding: 10px;"></el-input>
+                    </el-form-item>
                     <el-form-item  prop="input1">
-                        <el-input v-model="input1" placeholder="输入新密码" style="padding: 10px;"></el-input>
+                        <el-input v-model="info.input1" placeholder="输入新密码" style="padding: 10px;"></el-input>
                     </el-form-item>
                     <el-form-item prop="input2">
-                        <el-input v-model="input2" placeholder="再次输入" style="padding: 10px;"></el-input>
+                        <el-input v-model="info.input2" placeholder="再次输入" style="padding: 10px;"></el-input>
                     </el-form-item>
                 </el-form>
                 <div align="center" style="padding: 20px;">
@@ -35,13 +41,23 @@
     export default {
         data(){
             return {
-                input1:'',
-                input2:'',
+                info: {
+                    old:'',
+                    input1: '',
+                    input2: '',
+                    username: '',
+                },
                 user_id:'',
                 role:'',
                 baseUrl,
                 baseImgPath,
                 rules: {
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                    ],
+                    old: [
+                        { required: true, message: '请输入原密码', trigger: 'blur' },
+                    ],
                     input1: [
                         { required: true, message: '请输入密码', trigger: 'blur' },
                     ],
@@ -68,7 +84,7 @@
                 // console.log(this.adminInfo);
             },
             submit(){
-                if(this.input1!==this.input2)
+                if(this.info.input1!==this.info.input2)
                 {
                     this.$message({
                         message: '两次密码不同！'
@@ -80,11 +96,14 @@
             },
             async confirm() {
                 try {
-                    const res = await changeCode({
-                        password:this.input1,
-                        user_id:this.user_id,
-                        username:this.role
-                    });
+                    const res = await changeCode(
+                        {
+                            password:this.info.old,
+                            new_password:this.info.input1,
+                            user_id:this.user_id,
+                            username:this.info.username
+                        }
+                    );
                     if (res.code === 200) {
                         this.$message({
                             type: 'success',
@@ -94,6 +113,9 @@
                         this.$router.push('/login');
                         console.log(res.data)
                     } else {
+                        this.$message({
+                            message: res.message
+                        });
                         throw new Error('获取数据失败');
                     }
                     // this.getFoods();
