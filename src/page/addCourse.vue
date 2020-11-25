@@ -98,11 +98,24 @@
                 name="file"
                 :show-file-list="false"
                 :on-success="uploadSuccessEdit"
-                :before-upload="beforeUploadEdit"
+                :on-change="quillUpload"
+                :before-upload="beforeAvatarUpload"
             >
             </el-upload>
-            <div>
+            <el-upload
+                class="avatar-uploader3"
+                :action="baseUrl + '/api/file/upload'"
+                name="file"
+                :show-file-list="false"
+                :on-change="quillUpload"
+                :on-success="uploadSuccessEditVideo"
+                :before-upload="beforeAvatarUploadVideo"
+            >
+            </el-upload>
+
+            <div >
                 <quill-editor class="editer" v-model="courseInfo.introduction" ref="myQuillEditor"
+                              v-loading="uploadLoading" element-loading-text="上传中"
                               style="height: 300px;width: 90%;position: relative;left: 5%" :options="editorOption" @ready="onEditorReady($event)">
                 </quill-editor>
             </div>
@@ -151,7 +164,9 @@
             return {
                 city: {},
                 loading: false,
+                uploadLoading: false,
                 quillUpdateImg: false,
+                uploadType:'',
                 editorOption: {
                     placeholder: '',
                     theme: 'snow',  // or 'bubble'
@@ -166,6 +181,10 @@
                                     } else {
                                         this.quill.format('image', false);
                                     }
+                                },
+                                'video':function(val){
+                                    console.log('video');
+                                    document.querySelector('.avatar-uploader3 input').click()
                                 }
                             }
                         }
@@ -322,17 +341,30 @@
             imageUpload(file) {
                 this.loading = file.status !== 'success';
             },
+            quillUpload(file) {
+                this.uploadLoading = file.status !== 'success';
+            },
             beforeAvatarUpload(file) {
                 const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
+                const isLt2M = file.size / 1024 / 1024 < 4;
                 if (!isRightType) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                    this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                    this.$message.error('上传头像图片大小不能超过 4MB!');
                 }
                 return isRightType && isLt2M;
+            },
+            beforeAvatarUploadVideo(file) {
+                const isRightType = (file.type === 'video/mp4') || (file.type === 'video/avi');
+                // const isLt2M = file.size / 1024 / 1024 < 4;
+                if (!isRightType) {
+                    this.$message.error('上传头像图片只能是视频格式!');
+                }
+                // if (!isLt2M) {
+                //     this.$message.error('上传头像图片大小不能超过 4MB!');
+                // }
+                return isRightType;
             },
             handleDelete(index) {
                 this.activities.splice(index, 1)
@@ -359,6 +391,25 @@
 
                 } else {
                     this.$message.error('图片插入失败')
+                }
+                // loading动画消失
+                this.quillUpdateImg = false
+            },
+            uploadSuccessEditVideo(res, file) {
+                // res为图片服务器返回的数据
+                // 获取富文本组件实例
+                let quill = this.$refs.myQuillEditor.quill;
+                // 如果上传成功
+                if (res.code === 200) {
+                    // 获取光标所在位置
+                    let length = quill.getSelection().index;
+                    // 插入图片  res.data.url为服务器返回的图片地址
+                    quill.insertEmbed(length, 'video', res.data);
+                    // 调整光标到最后
+                    quill.setSelection(length + 1);
+                    console.log(this.courseInfo.introduction);
+                } else {
+                    this.$message.error('视频插入失败')
                 }
                 // loading动画消失
                 this.quillUpdateImg = false

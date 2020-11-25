@@ -19,18 +19,6 @@
             <el-table
                 :data="commentInfo"
                 style="width: 100%">
-                <!--<el-table-column type="expand">-->
-                    <!--<template slot-scope="props">-->
-                        <!--<el-form label-position="left" inline class="demo-table-expand">-->
-                            <!--<el-form-item label="课程ID">-->
-                                <!--<span>{{ props.row.id }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="简介">-->
-                                <!--<span v-html="props.row.introduction"></span>-->
-                            <!--</el-form-item>-->
-                        <!--</el-form>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
                 <el-table-column
                     label="ID"
                     prop="id">
@@ -51,17 +39,22 @@
                     label="手机号"
                     prop="user.phone">
                 </el-table-column>
-
+                <!--状态0未评价/1已评价未审核/2审核通过/3审核不通过-->
                 <el-table-column label="操作" width="300"  key="option" align="center">
                     <template slot-scope="scope">
+                        <el-tag v-if="scope.row.status===0">未评价</el-tag>
+                        <el-tag type="success"  v-if="scope.row.status===2">审核通过</el-tag>
+                        <el-tag type="danger"  v-if="scope.row.status===3">审核不通过</el-tag>
                         <el-button
                             size="mini"
+                            v-if="scope.row.status===1"
                             @click="handleJudge(scope.$index, scope.row)">审批
                         </el-button>
                         </el-button>
                         <el-button
                             size="mini"
                             type="danger"
+                            v-if="scope.row.status!==0"
                             @click="handleModify(scope.$index, scope.row)">修改
                         </el-button>
                     </template>
@@ -80,7 +73,7 @@
             </el-dialog>
 
             <el-dialog title="修改评论" v-model="dialogFormVisibleChange">
-                <el-form :model="content">
+                <el-form>
                     <el-form-item label="内容" label-width="100px">
                         <el-input v-model="content" auto-complete="off"></el-input>
                     </el-form-item>
@@ -113,6 +106,7 @@
                 loading: false,
                 baseUrl,
                 userId:'',
+                courseId:'',
                 courseAll:[],
                 commentInfo: [],
                 // dialogFormVisible: false,
@@ -171,6 +165,7 @@
             handleModify(index, row) {
                 this.dialogFormVisibleChange = true;
                 this.changeId = row.id;
+                this.courseId = row.courseId;
                 this.content=row.content;
                 this.userId=row.user.userId;
                 this.deleteChoice = 1;
@@ -194,18 +189,19 @@
                     console.log('获取数据失败', err);
                 }
             },
-            async update(type) {
-                this.dialogVisible = false;
+            async update() {
+                this.dialogFormVisibleChange = false;
                 try {
                     const res = await changeComments({
                         id: this.changeId,
                         content: this.content,
+                        courseId: this.courseId,
                         userId:this.userId
                     });
                     if (res.code === 200) {
                         this.$message({
                             type: 'success',
-                            message: '审核通过'
+                            message: '更新成功'
                         });
                         this.initData();
                         console.log(res.data)
@@ -241,29 +237,6 @@
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
                 return isRightType && isLt2M;
-            },
-            async update() {
-                this.dialogFormVisible = false;
-                try {
-
-                    console.log('submit', this.selectTable);
-
-                    const res = await updateTeacher(this.selectTable);
-                    if (res.code === 200) {
-                        this.$message({
-                            type: 'success',
-                            message: '更新信息成功'
-                        });
-                        this.initData();
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.message
-                        });
-                    }
-                } catch (err) {
-                    console.log('更新信息失败', err);
-                }
             },
         }
     }
