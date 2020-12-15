@@ -33,6 +33,7 @@
                             :action="baseUrl + '/api/file/upload'"
                             :show-file-list="false"
                             :limit="1"
+                            :headers="myHeaders"
                             :on-change="imageUpload"
                             :on-success="handleShopAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
@@ -54,10 +55,12 @@
     import {addTeacher} from '@/api/getData'
     import {baseUrl, baseImgPath} from '@/config/env'
 
+    const token = localStorage.getItem('Authorization');
     export default {
         data() {
             return {
                 city: {},
+                myHeaders: {'Token': token},
                 loading: false,
                 formData: {
                     courseNum: "",

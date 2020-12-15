@@ -20,7 +20,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	if (window.fetch && method === 'fetch') {
         // console.log('fetch');
         let requestConfig;
-        if(url!=='http://212.64.40.135:8081/api/login') {
+        if(url!=='http://qituant.cn:8081/api/login') {
             requestConfig = {
                 credentials: 'include',
                 method: type,

@@ -12,11 +12,12 @@ let baseImgPath;
 
 if (process.env.NODE_ENV === 'development') {
 	// baseUrl = '';
-	baseUrl = 'http://212.64.40.135:8081';
+	baseUrl = 'http://qituant.cn:8081';
     // baseImgPath = '/img/';
 }else{
-    baseUrl = 'http://212.64.40.135:8081';
-    baseImgPath = 'http://212.64.40.135:8081';
+    baseUrl = 'http://qituant.cn:8081';
+    // baseUrl = 'http://212.64.40.135:8081';
+    baseImgPath = 'http://qituant.cn:8081';
 }
 
 export {

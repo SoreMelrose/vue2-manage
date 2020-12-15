@@ -43,17 +43,35 @@
                     <el-form-item label="课程最大人数" prop="exactCourses[0].openingNum" v-if="courseInfo.exactCourses">
                         <el-input v-model="courseInfo.exactCourses[0].openingNum" type="number"></el-input>
                     </el-form-item>
+                    <p>主图 首页展示</p>
                     <el-form-item label="课程主图" v-loading="loading" element-loading-text="图片上传中">
                         <el-upload
                             class="avatar-uploader"
                             :action="baseUrl + '/api/file/upload'"
                             :show-file-list="false"
                             :data="{choice:0}"
+                            :headers="myHeaders"
                             :limit="1"
                             :on-change="imageUpload"
                             :on-success="handleShopAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                             <img v-if="courseInfo.mainPicture" :src="courseInfo.mainPicture" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
+                    <p>副图 课程详情页展示</p>
+                    <el-form-item label="课程副图" v-loading="loading2" prop="otherPicture" element-loading-text="图片上传中">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="baseUrl + '/api/file/upload'"
+                            :show-file-list="false"
+                            :data="{choice:0}"
+                            :headers="myHeaders"
+                            :limit="1"
+                            :on-change="imageUpload2"
+                            :on-success="handleShopAvatarSuccess2"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="courseInfo.otherPicture" :src="courseInfo.otherPicture" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -67,6 +85,7 @@
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
                 :data="{choice:0}"
+                :headers="myHeaders"
                 :show-file-list="false"
                 :on-change="quillUpload"
                 :on-success="uploadSuccessEdit"
@@ -78,6 +97,7 @@
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
                 :data="{choice:0}"
+                :headers="myHeaders"
                 :show-file-list="false"
                 :on-change="quillUpload"
                 :on-success="uploadSuccessEditVideo"
@@ -101,6 +121,7 @@
 </template>
 
 <script>
+    const token = localStorage.getItem('Authorization');
     // 工具栏配置
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -132,7 +153,9 @@
         data(){
             return {
                 city: {},
+                myHeaders: {'Token': token},
                 loading:false,
+                loading2:false,
                 uploadLoading: false,
                 quillUpdateImg: false,
                 editorOption: {
@@ -345,8 +368,18 @@
                     this.$message.error('上传图片失败！');
                 }
             },
+            handleShopAvatarSuccess2(res, file) {
+                if (res.code === 200) {
+                    this.courseInfo.otherPicture = res.data;
+                }else{
+                    this.$message.error('上传图片失败！');
+                }
+            },
             imageUpload(file){
                 this.loading = file.status !== 'success';
+            },
+            imageUpload2(file){
+                this.loading2 = file.status !== 'success';
             },
             beforeAvatarUpload(file) {
                 const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');

@@ -74,17 +74,35 @@
                     <el-form-item label="课程最大人数" prop="exactCourses[0].openingNum" v-if="courseInfo.exactCourses">
                         <el-input v-model="courseInfo.exactCourses[0].openingNum" type="number"></el-input>
                     </el-form-item>
+                   <p>主图 首页展示</p>
                     <el-form-item label="课程主图" v-loading="loading" prop="mainPicture" element-loading-text="图片上传中">
                         <el-upload
                             class="avatar-uploader"
                             :action="baseUrl + '/api/file/upload'"
                             :show-file-list="false"
+                            :headers="myHeaders"
                             :data="{choice:0}"
                             :limit="1"
                             :on-change="imageUpload"
                             :on-success="handleShopAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                             <img v-if="courseInfo.mainPicture" :src="courseInfo.mainPicture" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
+                    <p>副图 课程详情页展示</p>
+                    <el-form-item label="课程副图" v-loading="loading2" prop="otherPicture" element-loading-text="图片上传中">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="baseUrl + '/api/file/upload'"
+                            :show-file-list="false"
+                            :headers="myHeaders"
+                            :data="{choice:0}"
+                            :limit="1"
+                            :on-change="imageUpload2"
+                            :on-success="handleShopAvatarSuccess2"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="courseInfo.otherPicture" :src="courseInfo.otherPicture" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -98,6 +116,7 @@
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
                 :data="{choice:0}"
+                :headers="myHeaders"
                 :show-file-list="false"
                 :on-success="uploadSuccessEdit"
                 :on-change="quillUpload"
@@ -109,6 +128,7 @@
                 :action="baseUrl + '/api/file/upload'"
                 name="file"
                 :data="{choice:0}"
+                :headers="myHeaders"
                 :show-file-list="false"
                 :on-change="quillUpload"
                 :on-success="uploadSuccessEditVideo"
@@ -116,6 +136,7 @@
             >
             </el-upload>
             <div>
+                <el-progress v-if="videoFlag == true" type="circle" :percentage="videoUploadPercent" style="margin-top:30px;"></el-progress>
                 <quill-editor class="editer" v-model="courseInfo.introduction" ref="myQuillEditor"
                               v-loading="uploadLoading" element-loading-text="上传中"
                               style="height: 300px;width: 90%;position: relative;left: 5%" :options="editorOption" @ready="onEditorReady($event)">
@@ -141,6 +162,7 @@
 </template>
 
 <script>
+    const token = localStorage.getItem('Authorization');
     // 工具栏配置
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -174,7 +196,11 @@
         data() {
             return {
                 city: {},
+                myHeaders: {'Token': token},
                 loading: false,
+                videoFlag:false,
+                videoUploadPercent:0,
+                loading2: false,
                 uploadLoading: false,
                 quillUpdateImg: false,
                 uploadType:'',
@@ -301,6 +327,20 @@
                     console.log('获取数据失败', err);
                 }
             },
+            handleShopAvatarSuccess2(res, file) {
+                if (res.code === 200) {
+                    this.courseInfo.otherPicture = res.data;
+                }else{
+                    this.$message.error('上传图片失败！');
+                }
+            },
+            uploadVideoProcess (event, file, fileList) {
+                console.log(event.percent, file, fileList)
+                this.videoFlag = true
+                // this.videoUploadPercent = file.percentage.toFixed(0)
+                // this.videoUploadPercent = event.percent.toFixed(0)
+                this.videoUploadPercent = Math.floor(event.percent)
+            },
             clearInfo(){
                 this.courseInfo=  {
                     introduction: '<h3>请输入课程详情</h3>',
@@ -378,6 +418,9 @@
             },
             imageUpload(file) {
                 this.loading = file.status !== 'success';
+            },
+            imageUpload2(file) {
+                this.loading2 = file.status !== 'success';
             },
             quillUpload(file) {
                 this.uploadLoading = file.status !== 'success';

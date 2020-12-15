@@ -11,7 +11,7 @@
                 v-model="query.time"
                 type="date"
                 format="yyyy 年 MM 月 dd 日"
-                placeholder="选择指定该时间之前"
+                placeholder="选择指定该时间之后"
                 value-format="yyyy-MM-dd"
                 >
             </el-date-picker>
@@ -101,7 +101,8 @@
                     console.log(this.query);
                     const res = await getShare(this.query);
                     if (res.code === 200) {
-                        console.log(res.data)
+                        console.log(res.data);
+                        this.shareInfo=res.data;
                     } else {
                         throw new Error('获取数据失败');
                     }

@@ -95,11 +95,11 @@
                             class="avatar-uploader"
                             :action="baseUrl + '/api/file/upload'"
                             :limit="1"
+                            :headers="myHeaders"
                             :show-file-list="false"
                             :on-change="imageUpload"
                             :on-success="handleServiceAvatarScucess"
                             :before-upload="beforeAvatarUpload">
-
                             <img v-if="selectTable.head" :src="selectTable.head" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -130,10 +130,12 @@
     import {baseUrl, baseImgPath} from '@/config/env'
     import {getTeacher, updateTeacher,deleteTeacher} from '@/api/getData'
     import {mapActions, mapState} from 'vuex'
+    const token = localStorage.getItem('Authorization');
     export default {
         data() {
             return {
                 deleteId: '',
+                myHeaders: {'Token': token},
                 dialogVisible: false,
                 finishLoading: true,
                 loading: false,

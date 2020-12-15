@@ -53,6 +53,7 @@
                             :action="baseUrl + '/api/file/upload'"
                             :limit="1"
                             :show-file-list="false"
+                            :headers="myHeaders"
                             :on-change="imageUpload"
                             :on-success="handleServiceAvatarScucess"
                             :before-upload="beforeAvatarUpload">
@@ -86,10 +87,12 @@
     import {baseUrl, baseImgPath} from '@/config/env'
     import {getStaff, updateStaff,deleteStaff} from '@/api/getData'
     import {mapActions, mapState} from 'vuex'
+    const token = localStorage.getItem('Authorization');
     export default {
         data() {
             return {
                 deleteId: '',
+                myHeaders: {'Token': token},
                 dialogVisible: false,
                 finishLoading: true,
                 loading: false,
